@@ -76,10 +76,10 @@
 ### **1. 編譯遊戲**  
 確保已安裝 C++ 編譯器，使用以下指令編譯專案：  
 ```bash
-g++ main.cpp -o RPGGame
+g++ -std=c++11 main.cpp -o main
 ```
 ### **2.執行遊戲**
 ```bash
-./RPGGame
+./main
 ```
 
