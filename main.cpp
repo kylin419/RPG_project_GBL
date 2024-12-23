@@ -89,17 +89,15 @@ int main()
         int row, col;
         cout << "請設定地圖的大小（列,行）：" << endl;
         cin >> row >> col;
-        Map map(row, col, player);
-        map.generateMonsters(row / 2);
+        Map map(player, row, col);
         string cmd;
-
         while (true)
         {
             for (int i = 0; i < row; i++)
                 cout << "- ";
             cout << endl;
 
-            cout << "輸入指令（w/a/s/d移動，pos查看怪物與玩家的位置，fight與怪物戰鬥，work工作，shop進入商店，bag查看背包，recover使用藥水恢復體力，stats查看狀態，upgrade提升屬性，learn學習技能，upgradeSkill升級技能，skills查看技能列表，pets查看寵物，sp選擇寵物，q退出遊戲）:" << endl;
+            cout << "輸入指令（w/a/s/d移動，pos查看怪物與玩家的位置，fight與怪物戰鬥，work工作，shop進入商店，bag查看背包，recover使用藥水恢復體力，stats查看狀態，upgrade提升屬性，learn學習技能，skills查看技能列表，pets查看寵物，sp選擇寵物，q退出遊戲）:" << endl;
             map.displayMap();
 
             for (int i = 0; i < row; i++)
@@ -110,13 +108,23 @@ int main()
 
             if (cmd == "q")
             {
-                cout << "遊戲結束！" << endl;
-                break;
+                cout << "確定要結束遊戲嗎？（y/n）：" << endl;
+                string confirm;
+                cin >> confirm;
+                if (confirm == "y")
+                {
+                    cout << "遊戲結束！" << endl;
+                    break;
+                }
+                else if (confirm == "n")
+                {
+                    cout << "遊戲繼續！" << endl;
+                    continue;
+                }
             }
             else if (cmd == "w" || cmd == "a" || cmd == "s" || cmd == "d")
             {
                 map.movePlayer(cmd[0]);
-                map.displayMap();
             }
             else if (cmd == "pos")
             {
@@ -166,7 +174,22 @@ int main()
             }
             else if (cmd == "shop")
             {
-                map.enterShop();
+                if(map.checkIfPlayerAtShop()){
+                    cout << "歡迎光臨商店" << endl;
+                    map.enterShop();
+                }
+                else{
+                    cout << "你不在商店附近" << endl;
+                }
+            }
+            else if(cmd=="hospital"){
+                if(map.checkIfPlayerAtHospital()){
+                    cout << "歡迎光臨醫院" << endl;
+                    map.enterHospital();
+                }
+                else{
+                    cout << "你不在醫院附近" << endl;
+                }
             }
             else if (cmd == "bag")
             {
@@ -224,6 +247,7 @@ int main()
                 player.switchPet(index);
             }
             else
+
             {
                 cout << "無效的指令，請重新輸入！" << endl;
             }

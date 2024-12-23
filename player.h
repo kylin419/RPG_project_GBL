@@ -32,7 +32,7 @@ private:
     string name;
     int money;
     JobType job;
-    int playerHealth = 20;
+    int playerHealth = 100;
     int mana = 50;                // 魔力值
     string equippedWeapon = "無"; // 預設無裝備
     int weaponDamage = 0;         // 武器攻擊力
@@ -47,22 +47,29 @@ private:
     Pet *activePet = nullptr; // 當前攜帶的寵物
 
 public:
+int orignalHealth = 100;
+int orignalMana = 50;
     Player(string name,JobType job) : money(200),name(name),job(job) {
         if (job == JobType::warrior)
         {
-            playerHealth += playerHealth * 0.3; // 獸人特性
+            orignalHealth += orignalHealth * 0.3; // 獸人特性
+            playerHealth =orignalHealth; // 獸人特性
             attributes["力量"] = 10;
         }
         else if (job == JobType::elder)
         {
-            mana += mana * 0.5; // 精靈特性
+            orignalMana += mana * 0.5; 
+            mana = orignalMana;
+            // 精靈特性
             attributes["敏捷"] = 10;
         }
     }
 
     void setName(string name) { this->name = name; }
     string getName() { return this->name; }
-
+    void setMoney(int m){
+        this->money = money-m;
+    }
     void displayStats()
     {
         cout << "玩家名稱: " << name << endl;
@@ -358,6 +365,17 @@ void useSkill(const string &skillName) {
     }
     void addPet(const string &petName, int strength)
     {
+        for (auto &pet : pets)
+        {
+            if (pet.getName() == petName)
+            {
+                pet.gainExperience(strength * 10); // 獎勵經驗值，提升等級
+                cout << "你的寵物 " << petName << " 獲得經驗值並提升等級！" << endl;
+                return; // 結束方法，避免新增重複寵物
+            }
+        }
+
+        // 如果沒有同名寵物，新增新寵物
         pets.emplace_back(petName, strength);
         cout << "獲得新寵物：" << petName << "！" << endl;
         if (!activePet)
@@ -380,7 +398,7 @@ void useSkill(const string &skillName) {
         {
             cout << i + 1 << ". " << pets[i].getName()
                  << " (等級：" << pets[i].getLevel()
-                 << ", 攻擊加成：" << pets[i].getStrength() << ")" << endl;
+                 << ", 攻擊加成：" << pets[i].getStrength()<<",經驗值："<<pets[i].getExperience() << ")" << endl;
         }
 
         if (activePet)

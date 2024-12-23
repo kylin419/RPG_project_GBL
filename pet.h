@@ -27,7 +27,10 @@ public:
             cout << "寵物 " << name << " 升級至等級 " << level << "！攻擊加成提升至 " << strength << endl;
         }
     }
-
+    int getExperience()
+    {
+        return experience;
+    }
     string getName() const { return name; }
     int getLevel() const { return level; }
     int getStrength() const { return strength; }
